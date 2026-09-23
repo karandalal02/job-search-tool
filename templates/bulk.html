@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Bulk Search</h1>
+<p class="subtitle">Pre-built Google search links across ATS platforms.</p>
+
+<form method="post" class="inline">
+  <div>
+    <label>Title</label>
+    <input type="text" name="title" value="{{ form.get('title','') }}" required>
+  </div>
+  <div>
+    <label>Location</label>
+    <input type="text" name="location" value="{{ form.get('location','') }}" placeholder="remote">
+  </div>
+  <div>
+    <label>Recency</label>
+    <select name="recency">
+      {% for opt in ['all','hour','day','week','month'] %}
+      <option value="{{ opt }}" {{ 'selected' if form.get('recency')==opt else '' }}>{{ opt }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit">Search</button>
+</form>
+
+{% if results %}
+<table>
+  <thead><tr><th>Platform</th><th>Link</th></tr></thead>
+  <tbody>
+    {% for r in results %}
+    <tr><td>{{ r.platform }}</td><td><a class="job-link" href="{{ r.url }}" target="_blank" rel="noopener">{{ r.url }}</a></td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

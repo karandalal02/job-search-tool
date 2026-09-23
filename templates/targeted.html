@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Targeted Search</h1>
+<p class="subtitle">Live results pulled directly from each company in your list.</p>
+
+<form method="post" class="inline">
+  <div>
+    <label>Title</label>
+    <input type="text" name="title" value="{{ form.get('title','') }}" required>
+  </div>
+  <div>
+    <label>Location</label>
+    <input type="text" name="location" value="{{ form.get('location','') }}" placeholder="remote">
+  </div>
+  <div>
+    <label>Recency (days)</label>
+    <input type="number" name="recency_days" value="{{ form.get('recency_days','') }}" placeholder="any">
+  </div>
+  <button type="submit">Search</button>
+</form>
+
+{% if results is not none %}
+  {% if not results %}
+    <p class="muted">No active companies yet — add some on the Companies page.</p>
+  {% endif %}
+  {% for row in results %}
+  <div class="company-block">
+    <h3>{{ row.company }} <span class="badge">{{ row.status }}</span></h3>
+    {% if row.matched_jobs %}
+      <table>
+        <thead><tr><th>Title</th><th>Location</th><th>Link</th></tr></thead>
+        <tbody>
+        {% for job in row.matched_jobs %}
+          <tr>
+            <td>{{ job.job_title }}</td>
+            <td class="muted">{{ job.location or '—' }}</td>
+            <td><a class="job-link" href="{{ job.job_url }}" target="_blank" rel="noopener">Open</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="muted">No results</p>
+    {% endif %}
+    <div class="search-link">Manual check: <a class="job-link" href="{{ row.search_link }}" target="_blank" rel="noopener">{{ row.search_link }}</a></div>
+  </div>
+  {% endfor %}
+{% endif %}
+{% endblock %}

@@ -11,6 +11,7 @@ import argparse
 import bulk_search
 import store
 import targeted_search
+from db import init_db
 
 
 def cmd_add_company(args):
@@ -78,6 +79,7 @@ def main():
     p_targeted.set_defaults(func=cmd_targeted)
 
     args = parser.parse_args()
+    init_db()
     args.func(args)
 
 
